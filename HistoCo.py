@@ -14,8 +14,8 @@ np.set_printoptions(suppress=True)
   
 # Save image in set directory 
 # Read RGB image 
-img1 = plt.imread('DataTP2\Data\I4.jpg')  
-img2 = plt.imread('DataTP2\Data\J4.jpg')
+img1 = plt.imread('D:\DataTP2\Data\I4.jpg')  
+img2 = plt.imread('D:\DataTP2\Data\J4.jpg')
   
 
 
@@ -33,21 +33,21 @@ J = np.unique(img2).shape[0]
     
 def JointHist(I,  J,  bin) :
     Conjoint =  np.zeros((I,J))
-    for i in range (I.shape[0]) :
-        for j in range (I.shape[1]):
-            Conjoint[I[i,j],J[i,j]]+=1 
-            if  (Conjoint[I[i,j],J[i,j]]>255):
-                Conjoint[I[i,j],J[i,j]]-=1
+    for i in range (img1.shape[0]) :
+        for j in range (img1.shape[1]):
+            Conjoint[img1[i,j],img2[i,j]]+=1 
+            if  (Conjoint[img1[i,j],img2[i,j]]>255):
+                Conjoint[img1[i,j],img2[i,j]]-=1
         
     
     return Conjoint
     
 
-#plt.imshow(JointHist(I,J,bin), vmin=0, vmax=255)
-#
-#cv2.imshow('image',JointHist(I,J,bin))
-#cv2.waitKey(0)
-#cv2.destroyAllWindows()
+plt.imshow(JointHist(I,J,bin), vmin=0, vmax=255)
+
+cv2.imshow('image',JointHist(I,J,bin))
+cv2.waitKey(0)
+cv2.destroyAllWindows()
 
 
   

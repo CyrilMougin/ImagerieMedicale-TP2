@@ -10,20 +10,20 @@ import matplotlib.pyplot as plt
 from HistoCo import JointHist 
 
 # =============================================================================
-# import images + normalisation intensité
+# import images
 # =============================================================================
 I1 = plt.imread('DataTP2\Data\I1.png')[:,:,1]  
 J1 = plt.imread('DataTP2\Data\J1.png')
-I2 = np.float32(plt.imread('DataTP2\Data\I2.jpg'))/255
-J2 = np.float32(plt.imread('DataTP2\Data\J2.jpg'))/255
-I3 = np.float32(plt.imread('DataTP2\Data\I3.jpg'))/255
-J3 = np.float32(plt.imread('DataTP2\Data\J3.jpg'))/255
-I4 = np.float32(plt.imread('DataTP2\Data\I4.jpg') )/255 
-J4 = np.float32(plt.imread('DataTP2\Data\J4.jpg'))/255
-I5 = np.float32(plt.imread('DataTP2\Data\I5.jpg') ) /255
-J5 = np.float32(plt.imread('DataTP2\Data\J5.jpg'))/255
-I6 = np.float32(plt.imread('DataTP2\Data\I6.jpg') ) /255
-J6 = np.float32(plt.imread('DataTP2\Data\J6.jpg'))/255
+I2 = np.int16(plt.imread('DataTP2\Data\I2.jpg'))
+J2 = np.int16(plt.imread('DataTP2\Data\J2.jpg'))
+I3 = np.int16(plt.imread('DataTP2\Data\I3.jpg'))  
+J3 = np.int16(plt.imread('DataTP2\Data\J3.jpg'))
+I4 = np.int16(plt.imread('DataTP2\Data\I4.jpg') ) 
+J4 = np.int16(plt.imread('DataTP2\Data\J4.jpg'))
+I5 = np.int16(plt.imread('DataTP2\Data\I5.jpg') ) 
+J5 = np.int16(plt.imread('DataTP2\Data\J5.jpg'))
+I6 = np.int16(plt.imread('DataTP2\Data\I6.jpg') ) 
+J6 = np.int16(plt.imread('DataTP2\Data\J6.jpg'))
 
 # =============================================================================
 # Q2.a SSD
@@ -33,7 +33,7 @@ def SSD(I,J):
     dif=I-J
     carre=np.power(dif, 2)
     somme=np.sum(carre)
-    return np.round(somme)
+    return somme
 
 Qa=SSD(I6, J6)
 
@@ -47,9 +47,9 @@ def CR(I,J):
     num=np.sum((I-Imoy)*(J-Jmoy))
     denum=(np.sqrt(np.sum(np.power(I-Imoy,2))))*(np.sqrt(np.sum(np.power(J-Jmoy,2))))
     p=num/denum
-    return np.round(p,3)
+    return p
     
-Qb=CR(I3, J3)
+Qb=CR(I6, J6)
 
 # =============================================================================
 # Q2.c IM
@@ -65,4 +65,4 @@ def IM(I,J):
     return Pi
             
 
-Qc=IM(I1, I1)
+#Qc=IM(I1, I1)
