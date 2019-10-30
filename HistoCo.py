@@ -20,8 +20,8 @@ np.set_printoptions(suppress=True)
   
 # Save image in set directory 
 # Read RGB image 
-img1 = plt.imread('D:\Sherbrooke\ImagerieMedicale-TP2\DataTP2\Data\I2.jpg')  
-img2 = plt.imread('D:\Sherbrooke\ImagerieMedicale-TP2\DataTP2\Data\J2.jpg')
+img1 = plt.imread('DataTP2\Data\I2.jpg')  
+img2 = plt.imread('DataTP2\Data\J2.jpg')
   
 
     
@@ -36,12 +36,13 @@ def JointHist(I,  J,  bin) :
     
     
     plt.imshow(Conjoint, origin='lower',cmap = 'jet')
+    return  Conjoint
     
     
     
 
 
-JointHist(img1,img2,bin)
+#JointHist(img1,img2,bin)
 
 
   
