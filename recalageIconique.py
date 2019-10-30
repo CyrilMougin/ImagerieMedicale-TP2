@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Oct 28 21:03:32 2019
+Created on Tue Oct 29 11:57:13 2019
 
 @author: Moi
 """
@@ -26,43 +26,26 @@ I6 = np.float32(plt.imread('DataTP2\Data\I6.jpg') ) /255
 J6 = np.float32(plt.imread('DataTP2\Data\J6.jpg'))/255
 
 # =============================================================================
-# Q2.a SSD
+# Q5.a
 # =============================================================================
+def interpolationPlusProcheVoisin(x,y) :
+    return [np.int32(np.round(x)), np.int32(np.round(y))]
 
-def SSD(I,J):
-    dif=I-J
-    carre=np.power(dif, 2)
-    somme=np.sum(carre)
-    return np.round(somme)
-
-Qa=SSD(I6, J6)
-
-# =============================================================================
-# Q2.b CR
-# =============================================================================
-
-def CR(I,J):
-    Imoy=np.mean(I)
-    Jmoy=np.mean(J)
-    num=np.sum((I-Imoy)*(J-Jmoy))
-    denum=(np.sqrt(np.sum(np.power(I-Imoy,2))))*(np.sqrt(np.sum(np.power(J-Jmoy,2))))
-    p=num/denum
-    return np.round(p,3)
+def interpolationBiLineaire(x,y):
+    xPrime=int(x)
+    yPrime=int(y)
+    a=np.abs(x-xPrime)
+    b=np.abs(y-yPrime)
     
-Qb=CR(I3, J3)
+    return
 
-# =============================================================================
-# Q2.c IM
-# =============================================================================
-def IM(I,J):
-    histoJoint=JointHist(I,J, bin)
-    IM=0
-    Pi=np.sum(histoJoint, axis=0)
-    Pj=np.sum(histoJoint, axis=1)
+def translation(I, p, q):
+    Itranslat=np.zeros((np.int32(np.ceil(I.shape[0]+p)),np.int32(np.ceil(I.shape[1]+q))))
     for i in range (I.shape[0]) :
         for j in range (I.shape[1]):
-            IM+=histoJoint[i,j]*np.log(histoJoint[i,j]/(Pi[i]*Pj[j]))
-    return Pi
-            
+            t=interpolationPlusProcheVoisin(i+p,j+q)
+            Itranslat[t[0],t[1]]=I[i,j]
+    return Itranslat
 
-Qc=IM(I1, I1)
+translation=,80.8)
+plt.imshow(translation,cmap='gray')
