@@ -34,31 +34,27 @@ def interpolationPlusProcheVoisin(Itranslat,I,i,j,p,q) :
     return Itranslat
 
 def interpolationBiLineaire(Itranslat,I,i,j,p,q) :
-    #Integer x and y coordinates of translated pixel to interpolate
     x=int(i+p)
     y=int(j+q)
-    #Fractional x and y coordinates of source pixel
-    src_x = i;
-    src_y = j;
-    #Integer coordinates of pixel to the left/right of the fractional source pixel:
-    xPrime = int(np.floor(src_x));
-    yPrime = int(np.floor(src_y));
+    xPrime = int(np.floor(i));
+    yPrime = int(np.floor(j));
         
     #Interpolate source pixel:
-    a = src_x-xPrime;
-    b = src_y-yPrime;
-    
-    Itranslat[x, y]=(1-a)*(1-b)*I[xPrime,yPrime]+(a)*(1-b)*I[xPrime+1,yPrime]+(1-a)*(b)*I[xPrime,yPrime+1]+(a)*(b)*I[xPrime+1,yPrime+1]
+    a = i-xPrime;
+    b = j-yPrime;
+
+    if(xPrime+1<Itranslat.shape[0] and yPrime+1<Itranslat.shape[1]):
+        Itranslat[x, y]=(1-a)*(1-b)*I[xPrime,yPrime]+(a)*(1-b)*I[xPrime+1,yPrime]+(1-a)*(b)*I[xPrime,yPrime+1]+(a)*(b)*I[xPrime+1,yPrime+1]
     return Itranslat
 
 def translation(I, p, q):
     Itranslat=np.zeros((I.shape[0],I.shape[1]))
     for i in range (Itranslat.shape[0]) :
         for j in range (Itranslat.shape[1]):
-            if (i+p<I.shape[0] and j+q<I.shape[1]):
-                #Itranslat=interpolationPlusProcheVoisin(Itranslat,I,i,j,p,q)
-                Itranslat=interpolationBiLineaire(Itranslat,I,i,j,p,q)
+            if (i+p<I.shape[0] and j+q<I.shape[1] and i+p>=0 and j+q>=0):
+                Itranslat=interpolationPlusProcheVoisin(Itranslat,I,i,j,p,q)
+                #Itranslat=interpolationBiLineaire(Itranslat,I,i,j,p,q)
     return Itranslat
 
-translation=translation(I2, 80,100)
+translation=translation(J1, -80.8,-100)
 plt.imshow(translation,cmap='gray')
