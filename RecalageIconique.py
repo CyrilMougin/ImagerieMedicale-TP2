@@ -28,24 +28,33 @@ J6 = np.float32(plt.imread('DataTP2\Data\J6.jpg'))/255
 # =============================================================================
 # Q5.a
 # =============================================================================
-def interpolationPlusProcheVoisin(x,y) :
-    return [np.int32(np.round(x)), np.int32(np.round(y))]
-
-def interpolationBiLineaire(x,y):
-    xPrime=int(x)
-    yPrime=int(y)
-    a=np.abs(x-xPrime)
-    b=np.abs(y-yPrime)
-    
-    return
-
-def translation(I, p, q):
-    Itranslat=np.zeros((np.int32(np.ceil(I.shape[0]+p)),np.int32(np.ceil(I.shape[1]+q))))
-    for i in range (I.shape[0]) :
-        for j in range (I.shape[1]):
-            t=interpolationPlusProcheVoisin(i+p,j+q)
-            Itranslat[t[0],t[1]]=I[i,j]
+def interpolationPlusProcheVoisin(Itranslat,I,i,j,p,q) :
+    t= [np.int32(np.round(i+p)), np.int32(np.round(j+q))]
+    Itranslat[t[0],t[1]]=I[i,j]
     return Itranslat
 
-translation=,80.8)
+def interpolationBiLineaire(Itranslat,I,i,j,p,q) :
+    x=int(i+p)
+    y=int(j+q)
+    xPrime = int(np.floor(i));
+    yPrime = int(np.floor(j));
+        
+    #Interpolate source pixel:
+    a = i-xPrime;
+    b = j-yPrime;
+
+    if(xPrime+1<Itranslat.shape[0] and yPrime+1<Itranslat.shape[1]):
+        Itranslat[x, y]=(1-a)*(1-b)*I[xPrime,yPrime]+(a)*(1-b)*I[xPrime+1,yPrime]+(1-a)*(b)*I[xPrime,yPrime+1]+(a)*(b)*I[xPrime+1,yPrime+1]
+    return Itranslat
+
+def translation(I, p, q):
+    Itranslat=np.zeros((I.shape[0],I.shape[1]))
+    for i in range (Itranslat.shape[0]) :
+        for j in range (Itranslat.shape[1]):
+            if (i+p<I.shape[0] and j+q<I.shape[1] and i+p>=0 and j+q>=0):
+                Itranslat=interpolationPlusProcheVoisin(Itranslat,I,i,j,p,q)
+                #Itranslat=interpolationBiLineaire(Itranslat,I,i,j,p,q)
+    return Itranslat
+
+translation=translation(J1, -80.8,-100)
 plt.imshow(translation,cmap='gray')
