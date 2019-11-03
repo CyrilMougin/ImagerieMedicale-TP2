@@ -34,15 +34,15 @@ def JointHist(I,  J,  bin) :
                 Conjoint[I[i,j],J[i,j]]-=1
 
     
-    
-    plt.imshow(Conjoint, origin='lower',cmap = 'jet')
+
     return  Conjoint
     
     
     
 
 
-#JointHist(img1,img2,bin)
+#histo=JointHist(img1,img2,bin)
+#plt.imshow(histo, origin='lower',cmap = 'jet')
 
 
   
