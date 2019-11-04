@@ -17,8 +17,8 @@ fig = plt.figure()
 ax = fig.gca(projection='3d')
 
 N = 2
-x,y,z = np.meshgrid(np.arange(0,20,1), np.arange(0,20,1),np.arange(0,20,1))
-x2,y2,z2 = np.meshgrid(np.arange(0,20,1), np.arange(0,20,1),np.arange(0,20,1))
+x,y,z = np.meshgrid(np.arange(0,15,1), np.arange(0,15,1),np.arange(0,5,1))
+x2,y2,z2 = np.meshgrid(np.arange(0,15,1), np.arange(0,15,1),np.arange(0,5,1))
 
 tot = np.array([x2,y2,z2,1])
 
@@ -29,7 +29,7 @@ print(tot[0])
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
-scat = ax.scatter(x, y, z, alpha=0.1)
+scat = ax.scatter(x, y, z, alpha=0.5)
 
 
 plt.tight_layout()
@@ -53,13 +53,13 @@ def similitude(s,theta, omega, phi, p, q, r) :
     ry = np.array([[np.cos(omega),0,-np.sin(omega),0],[0,1,0,0],[np.sin(omega),0,np.cos(omega),0],[0,0,0,1]])
     rz = np.array([[np.cos(phi),-np.sin(phi),0,0],[np.sin(phi),np.cos(phi),0,0],[0,0,1,0],[0,0,0,1]])
 
-    return simi.dot(trans.dot(rx).dot(ry).dot(rz))
+    return simi.dot(trans).dot(rx).dot(ry).dot(rz)
 
 
 
 
-tot = (similitude(1,0,0,0,0,0,40) ).dot(tot)
+tot = (similitude(0.5,0,80,0,50,0,40) ).dot(tot)
 
-scat1 = ax.scatter(tot[0], tot[1], tot[2], alpha=0.5)
+scat1 = ax.scatter(tot[0], tot[1], tot[2], alpha=0.1)
 
 
