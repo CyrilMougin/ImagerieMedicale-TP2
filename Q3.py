@@ -22,8 +22,6 @@ x2,y2,z2 = np.meshgrid(np.arange(0,20,1), np.arange(0,20,1),np.arange(0,20,1))
 
 tot = np.array([x2,y2,z2,1])
 
-print(tot[0])
-
 
 #T = np.exp(-x**2 - y**2 - z**2)
 
@@ -53,9 +51,10 @@ def similitude(s,theta, omega, phi, p, q, r) :
 
 
 
-
-tot = (similitude(1,0,0,0,0,0,40) ).dot(tot)
-
+#tot = (similitude(1,0,0,0,0,0,40) ).dot(tot)
+    
+mat = np.array([[0.9045,-0.3847,-0.1840,10.0000],[0.2939,0.8750,-0.3847,10.0000],[0.3090,0.2939,0.9045,10.0000],[0,0,0,1.0000]])
+tot = mat.dot(tot)
 scat1 = ax.scatter(tot[0], tot[1], tot[2], alpha=0.5)
 
 
