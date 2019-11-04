@@ -66,26 +66,24 @@ def translation(I, p, q):
 # =============================================================================
 # Q5.b
 # =============================================================================
-def recalage2DLucasKanade(I,J) : #p95
-    Jt=J-I
-    gradient=np.gradient(J)
-    Jx=gradient[1]
-    Jy=gradient[0]
-#    Jx = np.zeros(J.shape)
-#    Jy = np.zeros(J.shape)
-#    Jx[1:-1, 1:-1] = (J[1:-1, 2:] - J[1:-1, :-2]) / 2
-#    Jy[1:-1, 1:-1] = (J[2:, 1:-1] - J[:-2, 1:-1]) / 2
-    M=[[np.sum(Jx*Jx), np.sum(Jy*Jx)],[np.sum(Jy*Jx), np.sum(Jy*Jy)]]
-    b=[[np.sum(Jx*Jt)], [np.sum(Jy*Jt)]]
+def recalage2DLucasKanade(I1,I2) : #p95
+    Ix = np.gradient(I2)[0]
+    Iy = np.gradient(I2)[1]
+    It = I2-I1
+    
+    M=[[np.sum(Ix*Ix), np.sum(Iy*Ix)],[np.sum(Iy*Ix), np.sum(Iy*Iy)]]
+    b=[[np.sum(Ix*It)], [np.sum(Iy*It)]]
     Minv=np.linalg.inv(M)  
-    u=np.dot(Minv,b)
-    print(u)
-    translat=translation(J,u[0], u[1])
+    u=np.dot(-Minv,b)
+   # print(u)
+    translat=translation(I2,u[0], u[1])
+   
     return translat
 
-tmp=translation(I2, -80.8,-100)
-recalage=recalage2DLucasKanade(I2,tmp)
+
+recalage=recalage2DLucasKanade(BrainMRI_1,BrainMRI_4)
 plt.imshow(recalage,cmap='gray')
+
 
 def recalage2DLucasKanadeIteratif(I,J) :
     energies=[SSD(I,J)]
@@ -97,11 +95,11 @@ def recalage2DLucasKanadeIteratif(I,J) :
         recalage=recalage2DLucasKanade(I,J)
         energies=np.append(energies,SSD(I,recalage))
         i+=1
-    print(energies)
+   # print(energies)
     return J
 
 #tmp=translation(I2, -80.8,-100)
 #recalage=recalage2DLucasKanadeIteratif(I2,tmp)
-##recalage=recalage2DLucasKanadeIteratif(BrainMRI_1,BrainMRI_4)
+#recalage=recalage2DLucasKanadeIteratif(BrainMRI_1,BrainMRI_4)
 #plt.imshow(recalage,cmap='gray')
     
