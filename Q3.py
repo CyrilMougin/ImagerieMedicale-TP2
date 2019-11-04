@@ -34,10 +34,6 @@ scat = ax.scatter(x, y, z, alpha=0.5)
 
 plt.tight_layout()
 
-
-
-
-
 def trans_rigide(theta, omega, phi, p, q, r) :
     trans = np.array([[1,0,0,p],[0,1,0,q],[0,0,1,r],[0,0,0,1]])
     rx = np.array([[1,0,0,0],[0,np.cos(theta),-np.sin(theta),0],[0,np.sin(theta),np.cos(theta),0],[0,0,0,1]])

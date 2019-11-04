@@ -74,10 +74,12 @@ def recalage2DLucasKanade(I1,I2) : #p95
     M=[[np.sum(Ix*Ix), np.sum(Iy*Ix)],[np.sum(Iy*Ix), np.sum(Iy*Iy)]]
     b=[[np.sum(Ix*It)], [np.sum(Iy*It)]]
     Minv=np.linalg.inv(M)  
+
     u=np.dot(-Minv,b)
    # print(u)
     translat=translation(I2,u[0], u[1])
    
+
     return translat
 
 
