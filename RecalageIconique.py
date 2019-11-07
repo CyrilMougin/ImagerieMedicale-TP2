@@ -66,7 +66,7 @@ def translation(I, p, q):
 # =============================================================================
 # Q5.b
 # =============================================================================
-def recalage2DLucasKanade(I,J) : #p95
+def recalage2DLucasKanade(I,J) : #p94
     gradient=np.gradient(J)
     Jx = gradient[0]
     Jy = gradient[1]
@@ -77,16 +77,11 @@ def recalage2DLucasKanade(I,J) : #p95
     Minv=np.linalg.inv(M)  
 
     u=-np.dot(Minv,b)
-    print(u)
+    #print(u)
     translat=translation(J,u[0], u[1])
    
 
     return translat
-
-tmp=translation(I2, -80.8,-100)
-recalage=recalage2DLucasKanade(I2,tmp)
-plt.imshow(recalage,cmap='gray')
-
 
 def recalage2DLucasKanadeIteratif(I,J) :
     energies=[SSD(I,J)]
@@ -101,8 +96,27 @@ def recalage2DLucasKanadeIteratif(I,J) :
    # print(energies)
     return J
 
-#tmp=translation(I2, -80.8,-100)
+image1=I3
+image2=I4
+# =============================================================================
+# tmp=translation(image2, -80.8,-100)
+# recalage=recalage2DLucasKanadeIteratif(image1,tmp)
+# 
+# plt.figure(1)
+# plt.imshow(image1,cmap='gray')
+# plt.suptitle("Image 1")
+# 
+# plt.figure(2)
+# plt.imshow(image2,cmap='gray')
+# plt.suptitle("Image 2")
+# 
+# plt.figure(3)
+# plt.imshow(recalage,cmap='gray')
+# plt.suptitle("Recalage de l'image 2 sur l'image 1")
+# =============================================================================
+
+tmp=translation(I2, -80.8,-100)
 #recalage=recalage2DLucasKanadeIteratif(I2,tmp)
-#recalage=recalage2DLucasKanadeIteratif(BrainMRI_1,BrainMRI_4)
-#plt.imshow(recalage,cmap='gray')
+recalage=recalage2DLucasKanadeIteratif(BrainMRI_1,BrainMRI_4)
+plt.imshow(recalage,cmap='gray')
     
