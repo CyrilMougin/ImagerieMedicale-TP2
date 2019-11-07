@@ -67,28 +67,28 @@ def translation(I, p, q):
 # Q5.b
 # =============================================================================
 def recalage2DLucasKanade(I,J) : #p95
-    Ix = np.gradient(J)[0]
-    Iy = np.gradient(J)[1]
-    It = J-I
+    gradient=np.gradient(J)
+    Jx = gradient[0]
+    Jy = gradient[1]
+    Jt = J-I
     
-    
-    
-    M=[[np.sum(Ix*Ix), np.sum(Iy*Ix)],[np.sum(Iy*Ix), np.sum(Iy*Iy)]]
-    b=[[np.sum(Ix*It)], [np.sum(Iy*It)]]
+    M=np.array([[np.sum(Jx*Jx), np.sum(Jy*Jx)],[np.sum(Jy*Jx), np.sum(Jy*Jy)]])
+    b=np.array([[np.sum(Jx*Jt)], [np.sum(Jy*Jt)]])
     Minv=np.linalg.inv(M)  
     
     u=-Minv.dot(b)
     
     translat=translation(J,u[1], u[0])
-
-   
-
+    u=-np.dot(Minv,b)
+    print(u)
+    translat=translation(J,u[0], u[1])
     return translat
 
 
-recalage=recalage2DLucasKanade(BrainMRI_3,BrainMRI_4)
-plt.imshow(BrainMRI_3,cmap='gray')
-plt.imshow(recalage, cmap='gray', alpha=0.5)
+tmp=translation(I2, -80.8,-100)
+recalage=recalage2DLucasKanade(I2,tmp)
+plt.imshow(recalage,cmap='gray')
+
 
 
 def recalage2DLucasKanadeIteratif(I,J) :
