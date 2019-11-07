@@ -75,13 +75,21 @@ def recalage2DLucasKanade(I,J) : #p94
     M=np.array([[np.sum(Jx*Jx), np.sum(Jy*Jx)],[np.sum(Jy*Jx), np.sum(Jy*Jy)]])
     b=np.array([[np.sum(Jx*Jt)], [np.sum(Jy*Jt)]])
     Minv=np.linalg.inv(M)  
-
+    
+    u=-Minv.dot(b)
+    
+    translat=translation(J,u[1], u[0])
     u=-np.dot(Minv,b)
     #print(u)
     translat=translation(J,u[0], u[1])
-   
-
     return translat
+
+
+tmp=translation(I2, -80.8,-100)
+recalage=recalage2DLucasKanade(I2,tmp)
+plt.imshow(recalage,cmap='gray')
+
+
 
 def recalage2DLucasKanadeIteratif(I,J) :
     energies=[SSD(I,J)]
