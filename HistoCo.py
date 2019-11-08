@@ -47,11 +47,13 @@ def JointHist(I,  J,  Bin) :
     
 
 
-histo=JointHist(img1,img2,2)
-plt.imshow(histo, origin='lower',cmap = 'jet')
-
-
-a=np.array([[1,1,1,1],[1,1,1,1]])
-a[0:1,1:3]=0
-
+# =============================================================================
+# histo=JointHist(img1,img2,2)
+# plt.imshow(histo, origin='lower',cmap = 'jet')
+# 
+# 
+# a=np.array([[1,1,1,1],[1,1,1,1]])
+# a[0:1,1:3]=0
+# 
+# =============================================================================
   
