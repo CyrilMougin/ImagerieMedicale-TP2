@@ -35,7 +35,7 @@ def SSD(I,J):
     somme=np.sum(carre)
     return np.round(somme)
 
-Qa=SSD(I6, J6)
+#Qa=SSD(I6, J6)
 
 # =============================================================================
 # Q2.b CR
@@ -49,7 +49,7 @@ def CR(I,J):
     p=num/denum
     return np.round(p,3)
     
-Qb=CR(I6, J6)
+#Qb=CR(I6, J6)
 
 # =============================================================================
 # Q2.c IM
@@ -70,7 +70,7 @@ J6 = (plt.imread('DataTP2\Data\J6.jpg'))
 
 
 def IM(I,J):
-    histoJoint=JointHist(I,J, bin)
+    histoJoint=JointHist(I,J, 255)
     histoJoint=histoJoint/(I.shape[0]*I.shape[1])
     IM=0
     Pi=np.sum(histoJoint, axis=1)
@@ -84,4 +84,4 @@ def IM(I,J):
     return np.round(IM,3)
             
 
-Qc=IM(I6, J6)
+#Qc=IM(I6, J6)

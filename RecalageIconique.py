@@ -64,9 +64,7 @@ def translation(I, p, q):
 
 #translation=translation(I2, -80.8,-100)
 #plt.imshow(translation,cmap='gray')
-#translation=np.zeros(I2.shape)
-#translation=ndimage.interpolation.shift(I2, [50, 10], mode='nearest')
-#plt.imshow(translation,cmap='gray')
+
 
 # =============================================================================
 # Q5.b
@@ -82,51 +80,52 @@ def recalage2DLucasKanade(I,J) : #p94
     u=np.squeeze(np.linalg.solve(M,b))
     return u
 
-#tmp=translation(I2, -80,-100)
-#recalage=recalage2DLucasKanade(I2,tmp)
-#plt.imshow(tmp,cmap='gray')
 
-
-def recalage2DLucasKanadeIteratif(I,J) :
+def recalage2DLucasKanadeIteratif(I,J, i_max, afficherEnergie) :
     energies=[SSD(I,J)]
     recalage=J
+    recalageFinal=J
     u=recalage2DLucasKanade(I,J)
-    #tmp=translation(recalage,u[0], u[1])
     tmp=ndimage.interpolation.shift(recalage, u, mode='nearest')
     energies=np.append(energies,SSD(I,tmp))
+    energieMin=energies[0]
     i=0;
-    while (energies[i+1]<=energies[i]):
+    #while (energies[i+1]<=energies[i]):
+    while (i<i_max):
         i+=1
         recalage=tmp
         u+=recalage2DLucasKanade(I,recalage)
-        #tmp=translation(recalage,u[0], u[1])
         tmp=ndimage.interpolation.shift(recalage, u, mode='nearest')
         energies=np.append(energies,SSD(I,tmp))
-        print(u)
-        print(energies[i])
+        if (energies[-1]<energieMin) :
+            energieMin=energies[-1]
+            recalageFinal=tmp
+    if (afficherEnergie==True) :
+        print("Energie minimale : " + str(energieMin))
+        plt.plot(energies)
+        plt.show()
+    return recalageFinal
 
-    print(energies)
-    return recalage
+#Débruitage
+BrainMRI_1_debruité=ndimage.gaussian_filter(BrainMRI_1, sigma=1)
+BrainMRI_2_debruité=ndimage.gaussian_filter(BrainMRI_2, sigma=1)
+BrainMRI_3_debruité=ndimage.gaussian_filter(BrainMRI_3, sigma=1)
+BrainMRI_4_debruité=ndimage.gaussian_filter(BrainMRI_4, sigma=1)
 
-tmp=translation(I2, -20,100)
-recalage=recalage2DLucasKanadeIteratif(I2,tmp)
-##recalage=recalage2DLucasKanadeIteratif(BrainMRI_1,BrainMRI_4)
-plt.imshow(recalage,cmap='gray')
-# =============================================================================
-# tmp=translation(image2, -80.8,-100)
-# recalage=recalage2DLucasKanadeIteratif(image1,tmp)
-# 
-# plt.figure(1)
-# plt.imshow(image1,cmap='gray')
-# plt.suptitle("Image 1")
-# 
-# plt.figure(2)
-# plt.imshow(image2,cmap='gray')
-# plt.suptitle("Image 2")
-# 
-# plt.figure(3)
-# plt.imshow(recalage,cmap='gray')
-# plt.suptitle("Recalage de l'image 2 sur l'image 1")
+
+#489
+recalage=recalage2DLucasKanadeIteratif(BrainMRI_1_debruité,BrainMRI_4_debruité,1000, True)
+#plt.imshow(BrainMRI_4,cmap='gray')
+#
+#plt.imshow(BrainMRI_4-BrainMRI_4_debruité,cmap='gray')
+#
+#plt.imshow(BrainMRI_4-recalage,cmap='gray')
+
+
+
+
+
+
 # =============================================================================
 
 def rotation(I,phi):
@@ -151,8 +150,8 @@ def recalageRotationSSD(I,J):
 #         gradSSD= 
 # =============================================================================
 #recalageRotationSSD(BrainMRI_2,BrainMRI_4)
-imgRot = rotation(BrainMRI_1,22.22)
-plt.imshow(imgRot,cmap='gray')
+#imgRot = rotation(BrainMRI_1,22.22)
+#plt.imshow(imgRot,cmap='gray')
 
 # =============================================================================
 # tmp=translation(I2, -80.8,-100)
