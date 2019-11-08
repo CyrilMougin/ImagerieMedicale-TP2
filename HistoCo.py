@@ -25,13 +25,19 @@ img2 = plt.imread('DataTP2\Data\J2.jpg')
   
 
     
-def JointHist(I,  J,  bin) :
+def JointHist(I,  J,  Bin) :
     Conjoint =  np.zeros((int(np.amax(I))+1,(int(np.amax(J))+1)))
+    intervalle=255//Bin
+    print (intervalle)
     for i in range (I.shape[0]) :
         for j in range (I.shape[1]):
-            Conjoint[I[i,j],J[i,j]]+=1 
-            if  (Conjoint[I[i,j],J[i,j]]>255):
-                Conjoint[I[i,j],J[i,j]]-=1
+            xMin=I[i,j]//intervalle
+            yMin=J[i,j]//intervalle
+            Conjoint[ xMin*intervalle:xMin*intervalle +intervalle,yMin*intervalle:yMin*intervalle+intervalle]+=1 
+            
+            
+#            if  (Conjoint[I[i,j],J[i,j]]>255):
+#                Conjoint[I[i,j],J[i,j]]-=1
 
     
 
@@ -41,8 +47,11 @@ def JointHist(I,  J,  bin) :
     
 
 
-#histo=JointHist(img1,img2,bin)
-#plt.imshow(histo, origin='lower',cmap = 'jet')
+histo=JointHist(img1,img2,2)
+plt.imshow(histo, origin='lower',cmap = 'jet')
 
+
+a=np.array([[1,1,1,1],[1,1,1,1]])
+a[0:1,1:3]=0
 
   

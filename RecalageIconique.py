@@ -7,6 +7,7 @@ Created on Tue Oct 29 21:42:10 2019
 
 import numpy as np
 import matplotlib.pyplot as plt
+from  scipy import ndimage
 from CritereSim import SSD
 from PIL import Image
 
@@ -63,6 +64,9 @@ def translation(I, p, q):
 
 #translation=translation(I2, -80.8,-100)
 #plt.imshow(translation,cmap='gray')
+#translation=np.zeros(I2.shape)
+#translation=ndimage.interpolation.shift(I2, [50, 10], mode='nearest')
+#plt.imshow(translation,cmap='gray')
 
 # =============================================================================
 # Q5.b
@@ -73,42 +77,41 @@ def recalage2DLucasKanade(I,J) : #p94
     Jy = gradient[1]
     Jt = J-I
     
-    M=np.array([[np.sum(Jx*Jx), np.sum(Jy*Jx)],[np.sum(Jy*Jx), np.sum(Jy*Jy)]])
-    b=np.array([[np.sum(Jx*Jt)], [np.sum(Jy*Jt)]])
-    Minv=np.linalg.inv(M)  
-    
-    u=-Minv.dot(b)
-    
-    translat=translation(J,u[1], u[0])
-    u=-np.dot(Minv,b)
-    #print(u)
-    translat=translation(J,u[0], u[1])
-    return translat
+    M=np.array(([np.sum(Jx*Jx), np.sum(Jy*Jx)],[np.sum(Jy*Jx), np.sum(Jy*Jy)]))
+    b=np.array(([np.sum(Jx*Jt)], [np.sum(Jy*Jt)]))
+    u=np.squeeze(np.linalg.solve(M,b))
+    return u
 
-
-# =============================================================================
-# tmp=translation(I2, -80.8,-100)
-# recalage=recalage2DLucasKanade(I2,tmp)
-# plt.imshow(recalage,cmap='gray')
-# =============================================================================
-
+#tmp=translation(I2, -80,-100)
+#recalage=recalage2DLucasKanade(I2,tmp)
+#plt.imshow(tmp,cmap='gray')
 
 
 def recalage2DLucasKanadeIteratif(I,J) :
     energies=[SSD(I,J)]
-    recalage=recalage2DLucasKanade(I,J)
-    energies=np.append(energies,SSD(I,recalage))
+    recalage=J
+    u=recalage2DLucasKanade(I,J)
+    #tmp=translation(recalage,u[0], u[1])
+    tmp=ndimage.interpolation.shift(recalage, u, mode='nearest')
+    energies=np.append(energies,SSD(I,tmp))
     i=0;
     while (energies[i+1]<=energies[i]):
-        J=recalage
-        recalage=recalage2DLucasKanade(I,J)
-        energies=np.append(energies,SSD(I,recalage))
         i+=1
-   # print(energies)
-    return J
+        recalage=tmp
+        u+=recalage2DLucasKanade(I,recalage)
+        #tmp=translation(recalage,u[0], u[1])
+        tmp=ndimage.interpolation.shift(recalage, u, mode='nearest')
+        energies=np.append(energies,SSD(I,tmp))
+        print(u)
+        print(energies[i])
 
-image1=I3
-image2=I4
+    print(energies)
+    return recalage
+
+tmp=translation(I2, -20,100)
+recalage=recalage2DLucasKanadeIteratif(I2,tmp)
+##recalage=recalage2DLucasKanadeIteratif(BrainMRI_1,BrainMRI_4)
+plt.imshow(recalage,cmap='gray')
 # =============================================================================
 # tmp=translation(image2, -80.8,-100)
 # recalage=recalage2DLucasKanadeIteratif(image1,tmp)
