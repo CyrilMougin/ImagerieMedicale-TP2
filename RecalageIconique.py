@@ -172,12 +172,12 @@ def recalageTransformationRigideSSD(I,J):
     return
 
 
+afficherRecalageRotationSSD(BrainMRI_1,20)
 # =============================================================================
-# afficherRecalageRotationSSD(BrainMRI_1,20)
+# plt.figure(1)
+# plt.imshow(BrainMRI_1,cmap='gray')
+# plt.figure(2)
+# plt.imshow(rotation(BrainMRI_1,-10),cmap='gray')
 # =============================================================================
-plt.figure(1)
-plt.imshow(BrainMRI_1,cmap='gray')
-plt.figure(2)
-plt.imshow(rotation(BrainMRI_1,-10),cmap='gray')
 
 #afficherRecalageRotationSSD(BrainMRI_1,20)
