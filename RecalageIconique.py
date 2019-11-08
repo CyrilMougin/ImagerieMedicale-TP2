@@ -7,8 +7,9 @@ Created on Tue Oct 29 21:42:10 2019
 
 import numpy as np
 import matplotlib.pyplot as plt
-from CritereSim import SSD 
 from  scipy import ndimage
+from CritereSim import SSD
+from PIL import Image
 
 # =============================================================================
 # import images + normalisation intensité
@@ -70,22 +71,7 @@ def translation(I, p, q):
 # =============================================================================
 # Q5.b
 # =============================================================================
-#def recalage2DLucasKanade(I,J) : #p95
-#    gradient=np.gradient(J)
-#    Jx = gradient[0]
-#    Jy = gradient[1]
-#    Jt = J-I
-#    
-#    M=np.array(([np.sum(Jx*Jx), np.sum(Jy*Jx)],[np.sum(Jy*Jx), np.sum(Jy*Jy)]))
-#    b=np.array(([np.sum(Jx*Jt)], [np.sum(Jy*Jt)]))
-#    u=np.squeeze(np.linalg.solve(M,b))
-#    if (u[0]<1 and u[1]<1) :
-#        u=np.ceil(u)
-#    print(u)
-#    translat=translation(J,u[0], u[1])
-#    return translat
-
-def recalage2DLucasKanade(I,J) : #p95
+def recalage2DLucasKanade(I,J) : #p94
     gradient=np.gradient(J)
     Jx = gradient[0]
     Jy = gradient[1]
@@ -126,4 +112,52 @@ tmp=translation(I2, -20,100)
 recalage=recalage2DLucasKanadeIteratif(I2,tmp)
 ##recalage=recalage2DLucasKanadeIteratif(BrainMRI_1,BrainMRI_4)
 plt.imshow(recalage,cmap='gray')
+# =============================================================================
+# tmp=translation(image2, -80.8,-100)
+# recalage=recalage2DLucasKanadeIteratif(image1,tmp)
+# 
+# plt.figure(1)
+# plt.imshow(image1,cmap='gray')
+# plt.suptitle("Image 1")
+# 
+# plt.figure(2)
+# plt.imshow(image2,cmap='gray')
+# plt.suptitle("Image 2")
+# 
+# plt.figure(3)
+# plt.imshow(recalage,cmap='gray')
+# plt.suptitle("Recalage de l'image 2 sur l'image 1")
+# =============================================================================
+
+def rotation(I,phi):
+    I = Image.fromarray(I)
+    imRot = im.rotate(phi)
+    width, height = imRot.size
+    imRot=list(imRot.getdata())
+    imRot=np.array(imRot)
+    imRot=np.reshape(imRot,(height,width))
+    return imRot
+
+def recalageRotationSSD(I,J):
+    phi=0
+    for i in range(100):
+        rz = np.array([[np.cos(phi),-np.sin(phi),0],[np.sin(phi),np.cos(phi),0],[0,0,1]])
+        imgRotated = J.dot(rz)
+        
+    plt.imshow(imgRotated,cmap='gray')
+    return
+# =============================================================================
+#         grad = 
+#         gradSSD= 
+# =============================================================================
+#recalageRotationSSD(BrainMRI_2,BrainMRI_4)
+imgRot = rotation(BrainMRI_1,22.22)
+plt.imshow(imgRot,cmap='gray')
+
+# =============================================================================
+# tmp=translation(I2, -80.8,-100)
+# #recalage=recalage2DLucasKanadeIteratif(I2,tmp)
+# recalage=recalage2DLucasKanadeIteratif(BrainMRI_1,BrainMRI_4)
+# plt.imshow(recalage,cmap='gray')
+# =============================================================================
     
