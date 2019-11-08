@@ -102,6 +102,25 @@ def recalage2DLucasKanadeIteratif(I,J, i_max, afficherEnergie) :
         plt.show()
     return recalageFinal
 
+def recalageTraslationDescente(I,J,):
+    p=0
+    q=0
+    epsilon=0.000001
+    translation=I
+    for i in range(200):
+        u=[p,q]
+        translation=ndimage.interpolation.shift(I, u, mode='nearest')
+        gradient=np.gradient(translation)
+        dIdx=gradient[0]
+        dIdy=gradient[1]
+        dSSDdp=2*np.sum((translation-J)*dIdx)
+        dSSDdq=2*np.sum((translation-J)*dIdy)
+        p-=epsilon*dSSDdp
+        q-=epsilon*dSSDdq    
+        
+        
+    return translation
+        
 #Débruitage
 BrainMRI_1_debruité=ndimage.gaussian_filter(BrainMRI_1, sigma=1)
 BrainMRI_2_debruité=ndimage.gaussian_filter(BrainMRI_2, sigma=1)
@@ -109,19 +128,21 @@ BrainMRI_3_debruité=ndimage.gaussian_filter(BrainMRI_3, sigma=1)
 BrainMRI_4_debruité=ndimage.gaussian_filter(BrainMRI_4, sigma=1)
 #
 #
-#translationx=ndimage.interpolation.shift(BrainMRI_1, [50,0], mode='nearest')
-#translationy=ndimage.interpolation.shift(BrainMRI_1_debruité, [0,20], mode='nearest')
-#translationxy=ndimage.interpolation.shift(BrainMRI_1_debruité, [20,20], mode='nearest')
-#recalage=recalage2DLucasKanadeIteratif(BrainMRI_1,BrainMRI_2,1000, True)
-#plt.imshow(translationx,cmap='gray')
-###
-###plt.imshow(BrainMRI_2_debruité-recalage,cmap='gray')
-####
-#plt.imshow(recalage-BrainMRI_1_debruité,cmap='gray')
-##
+translationx=ndimage.interpolation.shift(BrainMRI_1_debruité, [50,0], mode='nearest')
+translationy=ndimage.interpolation.shift(BrainMRI_1_debruité, [0,20], mode='nearest')
+translationxy=ndimage.interpolation.shift(BrainMRI_1_debruité, [10,10], mode='nearest')
+
+def Q1(translation):
+    recalage=recalage2DLucasKanadeIteratif(BrainMRI_1_debruité,translation,800, True)
+    plt.figure(2)
+    plt.imshow(recalage,cmap='gray')
+    plt.figure(3)
+    plt.imshow(translationxy-recalage,cmap='gray')
+    plt.figure(4)
+    plt.imshow(recalage-BrainMRI_1_debruité,cmap='gray')
 
 
-
+Q1(translationy)
 
 
 # =============================================================================
@@ -172,7 +193,7 @@ def recalageTransformationRigideSSD(I,J):
     return
 
 
-afficherRecalageRotationSSD(BrainMRI_1,20)
+#afficherRecalageRotationSSD(BrainMRI_1,20)
 # =============================================================================
 # plt.figure(1)
 # plt.imshow(BrainMRI_1,cmap='gray')
