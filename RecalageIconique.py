@@ -86,20 +86,19 @@ def recalage2DLucasKanadeIteratif(I,J, i_max, afficherEnergie) :
     recalage=J
     recalageFinal=J
     u=recalage2DLucasKanade(I,J)
-    tmp=ndimage.interpolation.shift(recalage, u, mode='nearest')
-    energies=np.append(energies,SSD(I,tmp))
+    recalage=ndimage.interpolation.shift(recalage, u, mode='wrap')
+    energies=np.append(energies,SSD(I,recalage))
     energieMin=energies[0]
     i=0;
     #while (energies[i+1]<=energies[i]):
     while (i<i_max):
         i+=1
-        recalage=tmp
         u+=recalage2DLucasKanade(I,recalage)
-        tmp=ndimage.interpolation.shift(recalage, u, mode='nearest')
-        energies=np.append(energies,SSD(I,tmp))
+        recalage=ndimage.interpolation.shift(recalage, u, mode='wrap')
+        energies=np.append(energies,SSD(I,recalage))
         if (energies[-1]<energieMin) :
             energieMin=energies[-1]
-            recalageFinal=tmp
+            recalageFinal=recalage
     if (afficherEnergie==True) :
         print("Energie minimale : " + str(energieMin))
         plt.plot(energies)
@@ -115,15 +114,18 @@ def recalage2DLucasKanadeIteratif(I,J, i_max, afficherEnergie) :
 # =============================================================================
 
 
-#489
-# =============================================================================
-# recalage=recalage2DLucasKanadeIteratif(BrainMRI_1_debruité,BrainMRI_4_debruité,1000, True)
-# =============================================================================
-#plt.imshow(BrainMRI_4,cmap='gray')
+#decale=ndimage.interpolation.shift(BrainMRI_1_debruité, [10,10], mode='wrap')
+#recalage=recalage2DLucasKanadeIteratif(BrainMRI_1_debruité,BrainMRI_2_debruité,500, True)
+##plt.imshow(recalage,cmap='gray')
+##
+##plt.imshow(BrainMRI_2_debruité-recalage,cmap='gray')
+###
+#plt.imshow(recalage-BrainMRI_1_debruité)
 #
-#plt.imshow(BrainMRI_4-BrainMRI_4_debruité,cmap='gray')
-#
-#plt.imshow(BrainMRI_4-recalage,cmap='gray')
+
+
+
+
 
 # =============================================================================
 
@@ -136,22 +138,24 @@ def rotation(I,phi):
     w, h = imRot.size
     imRot=list(imRot.getdata())
     imRot=np.array(imRot)
-    imRot=np.reshape(imRot,(h,w))
-    return imRot[width:width*2,length:length*2]
-
-def calculGradientSSD(I,J,phi):
-    imRot = rotation(I,phi)
-    gradient = np.gradient(imRot)
-    gradX = gradient[0]
-    gradY = gradient[1]
-    gradSSD=2*np.sum((imRot-J)*(gradX*+gradY))
-    return gradSSD
+    imRot=np.reshape(imRot,(height,width))
+    return imRot
+    #return ndimage.interpolation.rotate(I, phi, mode='nearest')
 
 def recalageRotationSSD(I,J):
     phi=0
     epsilon = 0.5
+    x = np.linspace(0,I.shape[0]-1, num=I.shape[0])
+    y = np.linspace(0,I.shape[1]-1, num=I.shape[1])
+    X,Y=np.meshgrid(x,y)
+    gradient=np.gradient(I)
     for i in range(200):
-        gradSSD = calculGradientSSD(I,J,phi)
+        imRot = rotation(I,phi)
+        gradX = rotation(gradient[0],phi)
+        gradY = rotation(gradient[1],phi)
+        dIdx=gradX*(-X*np.sin(phi)-Y*np.cos(phi))
+        dIdy=gradY*(X*np.cos(phi)-Y*np.sin(phi))
+        gradSSD=2*np.sum((imRot-J)*(dIdx+dIdy))
         phi=phi-epsilon*gradSSD
         print("phi = "+str(phi))
     return rotation(I,phi)
