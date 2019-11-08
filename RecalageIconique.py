@@ -138,9 +138,8 @@ def rotation(I,phi):
     w, h = imRot.size
     imRot=list(imRot.getdata())
     imRot=np.array(imRot)
-    imRot=np.reshape(imRot,(height,width))
-    return imRot
-    #return ndimage.interpolation.rotate(I, phi, mode='nearest')
+    imRot=np.reshape(imRot,(h,w))
+    return imRot[width:width*2,length:length*2]
 
 def recalageRotationSSD(I,J):
     phi=0
@@ -176,12 +175,12 @@ def recalageTransformationRigideSSD(I,J):
     return
 
 
-afficherRecalageRotationSSD(BrainMRI_1,20)
 # =============================================================================
-# plt.figure(1)
-# plt.imshow(BrainMRI_1,cmap='gray')
-# plt.figure(2)
-# plt.imshow(rotation(BrainMRI_1,-10),cmap='gray')
+# afficherRecalageRotationSSD(BrainMRI_1,20)
 # =============================================================================
+plt.figure(1)
+plt.imshow(BrainMRI_1,cmap='gray')
+plt.figure(2)
+plt.imshow(rotation(BrainMRI_1,-10),cmap='gray')
 
 #plt.imshow()
