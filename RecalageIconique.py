@@ -80,48 +80,45 @@ def recalage2DLucasKanade(I,J) : #p94
     u=np.squeeze(np.linalg.solve(M,b))
     return u
 
-
 def recalage2DLucasKanadeIteratif(I,J, i_max, afficherEnergie) :
-    energies=[SSD(I,J)]
+    energies=[]
     recalage=J
     recalageFinal=J
-    u=recalage2DLucasKanade(I,J)
-    recalage=ndimage.interpolation.shift(recalage, u, mode='wrap')
+    u=[0,0]
     energies=np.append(energies,SSD(I,recalage))
-    energieMin=energies[0]
+    energieMin=[SSD(I,J)]
     i=0;
-    #while (energies[i+1]<=energies[i]):
     while (i<i_max):
-        i+=1
         u+=recalage2DLucasKanade(I,recalage)
-        recalage=ndimage.interpolation.shift(recalage, u, mode='wrap')
+        recalage=ndimage.interpolation.shift(recalage, u, mode='nearest')
         energies=np.append(energies,SSD(I,recalage))
         if (energies[-1]<energieMin) :
             energieMin=energies[-1]
             recalageFinal=recalage
+        i+=1
     if (afficherEnergie==True) :
         print("Energie minimale : " + str(energieMin))
         plt.plot(energies)
         plt.show()
     return recalageFinal
 
-# =============================================================================
-# #Débruitage
-# BrainMRI_1_debruité=ndimage.gaussian_filter(BrainMRI_1, sigma=1)
-# BrainMRI_2_debruité=ndimage.gaussian_filter(BrainMRI_2, sigma=1)
-# BrainMRI_3_debruité=ndimage.gaussian_filter(BrainMRI_3, sigma=1)
-# BrainMRI_4_debruité=ndimage.gaussian_filter(BrainMRI_4, sigma=1)
-# =============================================================================
-
-
-#decale=ndimage.interpolation.shift(BrainMRI_1_debruité, [10,10], mode='wrap')
-#recalage=recalage2DLucasKanadeIteratif(BrainMRI_1_debruité,BrainMRI_2_debruité,500, True)
-##plt.imshow(recalage,cmap='gray')
-##
-##plt.imshow(BrainMRI_2_debruité-recalage,cmap='gray')
-###
-#plt.imshow(recalage-BrainMRI_1_debruité)
+#Débruitage
+BrainMRI_1_debruité=ndimage.gaussian_filter(BrainMRI_1, sigma=1)
+BrainMRI_2_debruité=ndimage.gaussian_filter(BrainMRI_2, sigma=1)
+BrainMRI_3_debruité=ndimage.gaussian_filter(BrainMRI_3, sigma=1)
+BrainMRI_4_debruité=ndimage.gaussian_filter(BrainMRI_4, sigma=1)
 #
+#
+#translationx=ndimage.interpolation.shift(BrainMRI_1, [50,0], mode='nearest')
+#translationy=ndimage.interpolation.shift(BrainMRI_1_debruité, [0,20], mode='nearest')
+#translationxy=ndimage.interpolation.shift(BrainMRI_1_debruité, [20,20], mode='nearest')
+#recalage=recalage2DLucasKanadeIteratif(BrainMRI_1,BrainMRI_2,1000, True)
+#plt.imshow(translationx,cmap='gray')
+###
+###plt.imshow(BrainMRI_2_debruité-recalage,cmap='gray')
+####
+#plt.imshow(recalage-BrainMRI_1_debruité,cmap='gray')
+##
 
 
 
@@ -162,7 +159,7 @@ def recalageRotationSSD(I,J):
 def afficherRecalageRotationSSD(I,phi):
     plt.figure(1)
     plt.imshow(I,cmap='gray')
-    J = ndimage.rotate(I,phi)
+    J = rotation(I,phi)
     plt.figure(2)
     plt.imshow(J,cmap='gray')
     recalage = recalageRotationSSD(I,J)
@@ -183,4 +180,4 @@ plt.imshow(BrainMRI_1,cmap='gray')
 plt.figure(2)
 plt.imshow(rotation(BrainMRI_1,-10),cmap='gray')
 
-#plt.imshow()
+#afficherRecalageRotationSSD(BrainMRI_1,20)
