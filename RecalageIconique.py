@@ -102,21 +102,20 @@ def recalage2DLucasKanadeIteratif(I,J, i_max, afficherEnergie) :
         plt.show()
     return recalageFinal
 
-def recalageTraslationDescente(I,J,):
-    p=0
-    q=0
-    epsilon=0.000001
-    translation=I
-    for i in range(200):
-        u=[p,q]
-        translation=ndimage.interpolation.shift(I, u, mode='nearest')
+def recalageTraslationDescente(I,J):
+    u=[0,0]
+    epsilon=0.01
+    translation=J
+    for i in range(500):
+        print(u)
+        translation=ndimage.interpolation.shift(J, u, mode='nearest')
         gradient=np.gradient(translation)
-        dIdx=gradient[0]
-        dIdy=gradient[1]
-        dSSDdp=2*np.sum((translation-J)*dIdx)
-        dSSDdq=2*np.sum((translation-J)*dIdy)
-        p-=epsilon*dSSDdp
-        q-=epsilon*dSSDdq    
+        dJdx=gradient[0]
+        dJdy=gradient[1]
+        dSSDdp=2*np.sum((translation-I)*dJdx)
+        dSSDdq=2*np.sum((translation-I)*dJdy)
+        u[0]+=epsilon*dSSDdp
+        u[1]+=epsilon*dSSDdq    
         
         
     return translation
@@ -132,17 +131,19 @@ translationx=ndimage.interpolation.shift(BrainMRI_1_debruité, [50,0], mode='nea
 translationy=ndimage.interpolation.shift(BrainMRI_1_debruité, [0,20], mode='nearest')
 translationxy=ndimage.interpolation.shift(BrainMRI_1_debruité, [10,10], mode='nearest')
 
+
 def Q1(translation):
-    recalage=recalage2DLucasKanadeIteratif(BrainMRI_1_debruité,translation,800, True)
+    #recalage=recalage2DLucasKanadeIteratif(BrainMRI_1_debruité,translation,800, True)
+    recalage=recalageTraslationDescente(BrainMRI_1_debruité,translation)
     plt.figure(2)
     plt.imshow(recalage,cmap='gray')
     plt.figure(3)
-    plt.imshow(translationxy-recalage,cmap='gray')
+    plt.imshow(translation-recalage,cmap='gray')
     plt.figure(4)
-    plt.imshow(recalage-BrainMRI_1_debruité,cmap='gray')
+    plt.imshow(BrainMRI_1_debruité-recalage,cmap='gray')
 
 
-Q1(translationy)
+Q1(translationx)
 
 
 # =============================================================================
