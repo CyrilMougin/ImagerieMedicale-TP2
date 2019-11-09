@@ -227,6 +227,7 @@ def recalageIconiqueRigide(I,J):
     y = np.linspace(0,I.shape[1]-1, num=I.shape[1])
     X,Y=np.meshgrid(x,y)
     gradient=np.gradient(I)
+    energies=[]
     for i in range(200) :
         J2=rotation(ndimage.interpolation.shift(J, [p,q], mode='nearest'),phi)
         [gradP,gradQ]=calculerGradSSDTranslation([p,q],J2,I,J)
@@ -234,15 +235,20 @@ def recalageIconiqueRigide(I,J):
         p+=epsilon*gradP
         q+=epsilon*gradQ
         phi-=epsilon*gradPhi
+        energies=np.append(energies,SSD(J2,I))
+    plt.figure(1)    
+    plt.plot(energies)
+    plt.show()
+    print(energies[-1])
     return J2
     
 def afficherRecalageIconiqueRigide(I,J):
-    plt.figure(1)
-    plt.imshow(I,cmap='gray')
     plt.figure(2)
+    plt.imshow(I,cmap='gray')
+    plt.figure(3)
     plt.imshow(J,cmap='gray')
     recalage = recalageIconiqueRigide(I,J)
-    plt.figure(3)
+    plt.figure(4)
     plt.imshow(recalage-I,cmap='gray')    
     return
 
