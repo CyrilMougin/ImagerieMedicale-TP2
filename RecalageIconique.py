@@ -131,7 +131,13 @@ def calculerGradSSDTranslation(u,translation,J,I):
 
 
 # =============================================================================
-
+# #Débruitage
+# BrainMRI_1_debruité=ndimage.gaussian_filter(BrainMRI_1, sigma=1)
+# BrainMRI_2_debruité=ndimage.gaussian_filter(BrainMRI_2, sigma=1)
+# BrainMRI_3_debruité=ndimage.gaussian_filter(BrainMRI_3, sigma=1)
+# BrainMRI_4_debruité=ndimage.gaussian_filter(BrainMRI_4, sigma=1)
+# #
+# #
 # translationx=ndimage.interpolation.shift(BrainMRI_1_debruité, [50,0], mode='nearest')
 # translationy=ndimage.interpolation.shift(BrainMRI_1_debruité, [0,20], mode='nearest')
 # translationxy=ndimage.interpolation.shift(BrainMRI_1_debruité, [10,10], mode='nearest')
@@ -181,8 +187,7 @@ def recalageRotationSSD(I,J):
     plt.figure(1)    
     plt.plot(energies)
     plt.show()
-    print(energies[-1])
-        
+    print(energies[-1])    
     return rotation(J,phi)
 
 def calculerGradSSDRotation(I,J,phi,gradient,X,Y):
@@ -209,12 +214,11 @@ def afficherRecalageRotationSSD(I,phi):
 
 
 
-#afficherRecalageRotationSSD(BrainMRI_1_debruité,20)
+afficherRecalageRotationSSD(BrainMRI_1_debruité,20)
 
 
 
 def recalageIconiqueRigide(I,J):
-    energies=[]
     p=0
     q=0
     phi=0
@@ -230,25 +234,20 @@ def recalageIconiqueRigide(I,J):
         p+=epsilon*gradP
         q+=epsilon*gradQ
         phi-=epsilon*gradPhi
-        energies=np.append(energies,SSD(J2,I))
-    plt.figure(1)    
-    plt.plot(energies)
-    plt.show()
-    print(energies[-1])
     return J2
     
 def afficherRecalageIconiqueRigide(I,J):
-    plt.figure(2)
+    plt.figure(1)
     plt.imshow(I,cmap='gray')
-    plt.figure(3)
+    plt.figure(2)
     plt.imshow(J,cmap='gray')
     recalage = recalageIconiqueRigide(I,J)
-    plt.figure(4)
+    plt.figure(3)
     plt.imshow(recalage-I,cmap='gray')    
     return
 
 
-afficherRecalageIconiqueRigide(BrainMRI_1_debruité,BrainMRI_3_debruité)
+afficherRecalageIconiqueRigide(BrainMRI_1,BrainMRI_3)
     
 # =============================================================================
 # plt.figure(1)
