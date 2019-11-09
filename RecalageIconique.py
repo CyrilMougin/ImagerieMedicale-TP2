@@ -119,18 +119,6 @@ def recalageTraslationDescente(I,J):
         
         
     return translation
-        
-#Débruitage
-BrainMRI_1_debruité=ndimage.gaussian_filter(BrainMRI_1, sigma=1)
-BrainMRI_2_debruité=ndimage.gaussian_filter(BrainMRI_2, sigma=1)
-BrainMRI_3_debruité=ndimage.gaussian_filter(BrainMRI_3, sigma=1)
-BrainMRI_4_debruité=ndimage.gaussian_filter(BrainMRI_4, sigma=1)
-#
-#
-translationx=ndimage.interpolation.shift(BrainMRI_1_debruité, [50,0], mode='nearest')
-translationy=ndimage.interpolation.shift(BrainMRI_1_debruité, [0,20], mode='nearest')
-translationxy=ndimage.interpolation.shift(BrainMRI_1_debruité, [10,10], mode='nearest')
-
 
 def Q1(translation):
     #recalage=recalage2DLucasKanadeIteratif(BrainMRI_1_debruité,translation,800, True)
@@ -143,7 +131,9 @@ def Q1(translation):
     plt.imshow(BrainMRI_1_debruité-recalage,cmap='gray')
 
 
-Q1(translationx)
+# =============================================================================
+# Q1(translationy)
+# =============================================================================
 
 
 # =============================================================================
@@ -168,15 +158,18 @@ def recalageRotationSSD(I,J):
     X,Y=np.meshgrid(x,y)
     gradient=np.gradient(I)
     for i in range(300):
-        imRot = rotation(I,phi)
-        gradX = rotation(gradient[0],phi)
-        gradY = rotation(gradient[1],phi)
-        dIdx=gradX*(-X*np.sin(phi/180*np.pi)-Y*np.cos(phi/180*np.pi))
-        dIdy=gradY*(X*np.cos(phi/180*np.pi)-Y*np.sin(phi/180*np.pi))
-        gradSSD=2*np.sum((imRot-J)*(dIdx+dIdy))
-        phi=phi-epsilon*gradSSD
+        phi=phi-epsilon*calculerGradSSDRotation(I,J,phi,gradient,X,Y)
         print("phi = "+str(phi))
     return rotation(J,phi)
+
+def calculerGradSSDRotation(I,J,phi,gradient,X,Y):
+    imRot = rotation(I,phi)
+    gradX = rotation(gradient[0],phi)
+    gradY = rotation(gradient[1],phi)
+    dIdx=gradX*(-X*np.sin(phi/180*np.pi)-Y*np.cos(phi/180*np.pi))
+    dIdy=gradY*(X*np.cos(phi/180*np.pi)-Y*np.sin(phi/180*np.pi))
+    gradSSD=2*np.sum((imRot-J)*(dIdx+dIdy))
+    return gradSSD
 
 def afficherRecalageRotationSSD(I,phi):
     plt.figure(1)
@@ -189,9 +182,23 @@ def afficherRecalageRotationSSD(I,phi):
     plt.imshow(recalage-I,cmap='gray')    
     return
 
-
-
 #afficherRecalageRotationSSD(BrainMRI_1,20)
+
+def recalageIconiqueRigide(I,J):
+    p=0
+    q=0
+    phi=0
+    epsilon = 0.00001
+    x = np.linspace(0,I.shape[0]-1, num=I.shape[0])
+    y = np.linspace(0,I.shape[1]-1, num=I.shape[1])
+    X,Y=np.meshgrid(x,y)
+    gradient=np.gradient(I)
+    for i in range(200) :
+        [gradP,gradQ]=calculerGradSSDTranslation(p,q,I,rotation(J,phi))
+        gradPhi=calculerGradSSDRotation(I,J,phi,gradient,X,Y)
+
+
+
 # =============================================================================
 # plt.figure(1)
 # plt.imshow(BrainMRI_1,cmap='gray')
