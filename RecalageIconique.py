@@ -214,7 +214,7 @@ def afficherRecalageRotationSSD(I,phi):
 
 
 
-afficherRecalageRotationSSD(BrainMRI_1_debruité,20)
+#afficherRecalageRotationSSD(BrainMRI_1_debruité,20)
 
 
 
@@ -222,7 +222,7 @@ def recalageIconiqueRigide(I,J):
     p=0
     q=0
     phi=0
-    epsilon = 0.00001
+    epsilon = 0.000005
     x = np.linspace(0,I.shape[0]-1, num=I.shape[0])
     y = np.linspace(0,I.shape[1]-1, num=I.shape[1])
     X,Y=np.meshgrid(x,y)

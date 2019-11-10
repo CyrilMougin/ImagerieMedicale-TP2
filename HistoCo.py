@@ -35,7 +35,7 @@ J6 = plt.imread('DataTP2\Data\J6.jpg')
     
 def JointHist(I,  J,  Bin) :
     Conjoint =  np.zeros((int(np.amax(I))+1,(int(np.amax(J))+1)))
-    intervalle=255//Bin
+    intervalle= round(255/Bin)
     print (intervalle)
     for i in range (I.shape[0]) :
         for j in range (I.shape[1]):
@@ -53,7 +53,7 @@ def JointHist(I,  J,  Bin) :
     
     for i in range (Conjoint.shape[0]) :
         for j in range (Conjoint.shape[1]):
-            sum = sum + Conjoint[i,j]
+            sum = sum + Conjoint[i,j]   
     print(sum)
 
     return  Conjoint
@@ -63,6 +63,14 @@ def JointHist(I,  J,  Bin) :
 
 
 
+
+histo=JointHist(I2,J2,160)
+ig, ax = plt.subplots()
+ax.imshow(histo, origin='lower',cmap = 'jet')
+
+plt.show()
+  
+
 # =============================================================================
 # histo=JointHist(I6,J6,100)
 # ig, ax = plt.subplots()
@@ -71,3 +79,4 @@ def JointHist(I,  J,  Bin) :
 # plt.show()
 #   
 # =============================================================================
+
