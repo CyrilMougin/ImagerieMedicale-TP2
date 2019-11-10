@@ -180,7 +180,6 @@ def recalageRotationSSD(I,J):
     y = np.linspace(0,I.shape[1]-1, num=I.shape[1])
     X,Y=np.meshgrid(x,y)
     gradient=np.gradient(I)
-    tabSSD=[]
     for i in range(300):
         phi=phi-epsilon*calculerGradSSDRotation(I,rotation(J,phi),0,gradient,X,Y)
         recalage= rotation(J,phi)
@@ -216,7 +215,7 @@ def afficherRecalageRotationSSD(I,phi):
 
 
 
-afficherRecalageRotationSSD(BrainMRI_1_debruité,20)
+#afficherRecalageRotationSSD(BrainMRI_1_debruité,20)
 
 
 
@@ -224,12 +223,12 @@ def recalageIconiqueRigide(I,J):
     p=0
     q=0
     phi=0
-    epsilon = 0.00001
+    epsilon = 0.000005
     x = np.linspace(0,I.shape[0]-1, num=I.shape[0])
     y = np.linspace(0,I.shape[1]-1, num=I.shape[1])
     X,Y=np.meshgrid(x,y)
     gradient=np.gradient(I)
-    for i in range(200) :
+    for i in range(5000) :
         J2=rotation(ndimage.interpolation.shift(J, [p,q], mode='nearest'),phi)
         [gradP,gradQ]=calculerGradSSDTranslation([p,q],J2,I,J)
         gradPhi=calculerGradSSDRotation(I,J2,0,gradient,X,Y)
@@ -249,7 +248,7 @@ def afficherRecalageIconiqueRigide(I,J):
     return
 
 
-#afficherRecalageIconiqueRigide(BrainMRI_1,BrainMRI_3)
+afficherRecalageIconiqueRigide(BrainMRI_1,BrainMRI_2)
     
 # =============================================================================
 # plt.figure(1)
