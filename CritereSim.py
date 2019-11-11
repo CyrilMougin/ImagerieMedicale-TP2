@@ -33,7 +33,7 @@ def SSD(I,J):
     dif=I-J
     carre=np.power(dif, 2)
     somme=np.sum(carre)
-    return np.round(somme)
+    return somme
 
 #Qa=SSD(I6, J6)
 

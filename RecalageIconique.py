@@ -175,7 +175,7 @@ def rotation(I,phi):
 def recalageRotationSSD(I,J):
     energies=[]
     phi=0
-    epsilon = 0.000014 
+    epsilon = 0.000000005 
     x = np.linspace(0,I.shape[0]-1, num=I.shape[0])
     y = np.linspace(0,I.shape[1]-1, num=I.shape[1])
     X,Y=np.meshgrid(x,y)
@@ -194,9 +194,9 @@ def calculerGradSSDRotation(I,J,phi,gradient,X,Y):
     imRot = rotation(I,phi)
     gradX = rotation(gradient[0],phi)
     gradY = rotation(gradient[1],phi)
-    dIdx=gradX*(-X*np.sin(phi/180*np.pi)-Y*np.cos(phi/180*np.pi))
-    dIdy=gradY*(X*np.cos(phi/180*np.pi)-Y*np.sin(phi/180*np.pi))
-    gradSSD=2*np.sum((imRot-J)*(dIdx+dIdy))
+    dIdx=gradX.T*(-X*np.sin(phi/180*np.pi)-Y*np.cos(phi/180*np.pi))
+    dIdy=gradY.T*(X*np.cos(phi/180*np.pi)-Y*np.sin(phi/180*np.pi))
+    gradSSD=2*np.sum((imRot-J).T*(dIdx+dIdy))
     return gradSSD
 
 def afficherRecalageRotationSSD(I,phi):
@@ -219,16 +219,18 @@ def afficherRecalageRotationSSD(I,phi):
 
 
 def recalageIconiqueRigide(I,J):
-    p=0
-    q=0
-    phi=0
-    epsilon = 0.000005
+    p=1
+    q=1
+    phi=1
+    epsilon = 0.000001
+    i=0
     x = np.linspace(0,I.shape[0]-1, num=I.shape[0])
     y = np.linspace(0,I.shape[1]-1, num=I.shape[1])
     X,Y=np.meshgrid(x,y)
     gradient=np.gradient(I)
     energies=[]
-    for i in range(200) :
+    stop = False
+    while i<500 and not stop:
         J2=rotation(ndimage.interpolation.shift(J, [p,q], mode='nearest'),phi)
         [gradP,gradQ]=calculerGradSSDTranslation([p,q],J2,I,J)
         gradPhi=calculerGradSSDRotation(I,J2,0,gradient,X,Y)
@@ -236,10 +238,21 @@ def recalageIconiqueRigide(I,J):
         q+=epsilon*gradQ
         phi-=epsilon*gradPhi
         energies=np.append(energies,SSD(J2,I))
+        print(SSD(J2,I))
+        i+=1
+        if (i>10):
+            if np.power((energies[-1]-energies[-8]),2)<0.05 :
+                stop = True
+# =============================================================================
+#         plt.subplots()
+#         plt.imshow(J2,cmap='gray')
+#         plt.show()
+# =============================================================================
+    
     plt.figure(1)    
     plt.plot(energies)
     plt.show()
-    print(energies[-1])
+    print(i)
     return J2
     
 def afficherRecalageIconiqueRigide(I,J):
@@ -250,10 +263,11 @@ def afficherRecalageIconiqueRigide(I,J):
     recalage = recalageIconiqueRigide(I,J)
     plt.figure(4)
     plt.imshow(recalage-I,cmap='gray')    
+    plt.figure(5)
+    plt.imshow(recalage,cmap='gray')
     return
 
-
-afficherRecalageIconiqueRigide(BrainMRI_1,BrainMRI_3)
+afficherRecalageIconiqueRigide(I2,J2)
     
 # =============================================================================
 # plt.figure(1)
