@@ -64,19 +64,10 @@ def JointHist(I,  J,  Bin) :
 
 
 
-histo=JointHist(I2,J2,160)
-ig, ax = plt.subplots()
-ax.imshow(histo, origin='lower',cmap = 'jet')
-
-plt.show()
-  
-
-# =============================================================================
-# histo=JointHist(I6,J6,100)
-# ig, ax = plt.subplots()
-# ax.imshow(histo, origin='lower',cmap = 'jet')
-# 
-# plt.show()
-#   
-# =============================================================================
+#histo=JointHist(I2,J2,160)
+#ig, ax = plt.subplots()
+#ax.imshow(histo, origin='lower',cmap = 'jet')
+#
+#plt.show()
+#  
 
